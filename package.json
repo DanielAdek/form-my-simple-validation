@@ -1,0 +1,27 @@
+{
+  "name": "form-my-simple-validation",
+  "version": "0.0.1",
+  "main": "app.js",
+  "repository": "https://github.com/DanielAdek/form-simple-validation.git",
+  "author": "DanielAdek",
+  "license": "MIT",
+  "private": false,
+  "dependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-preset-env": "^1.7.0",
+    "babel-preset-latest": "^6.24.1"
+  },
+  "devDependencies": {
+    "chai": "^4.2.0",
+    "eslint": "^6.6.0",
+    "eslint-config-airbnb": "^18.0.1",
+    "eslint-config-airbnb-base": "^14.0.0",
+    "eslint-plugin-import": "^2.18.2",
+    "mocha": "^6.2.2",
+    "nyc": "^14.1.1"
+  },
+  "scripts": {
+    "start": "babel-node app.js",
+    "test": "nyc mocha src/test/**.spec.js --require babel-core/register --exit"
+  }
+}
