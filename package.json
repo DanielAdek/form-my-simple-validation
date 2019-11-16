@@ -16,6 +16,7 @@
   },
   "devDependencies": {
     "chai": "^4.2.0",
+    "coveralls": "^3.0.7",
     "eslint": "^6.6.0",
     "eslint-config-airbnb": "^18.0.1",
     "eslint-config-airbnb-base": "^14.0.0",
@@ -27,6 +28,7 @@
     "Validation"
   ],
   "scripts": {
+    "coverage": "nyc report --reporter=text-lcov | coveralls",
     "start": "babel-node app.js",
     "test": "nyc mocha src/test/**.spec.js --require babel-core/register --exit"
   }
