@@ -1,22 +1,31 @@
-import { errorMsg, sampleRequestSchema } from './message';
+import { errorMsg, sampleformSchema } from './message';
 import {
   isEmail, isAlpha, isDecimal,
   isEmpty, isPhoneNumber, isName,
   isInteger, splitCamelCaseWord
 } from './regex';
+
+/**
+ * @desc SENDS ERROR TO USER
+ * @param {object} customError USER'S CUSTOM ERROR
+ * @param {object} defaultError PACKAGE DEFAULT ERROR
+ * @returns {object} JSON
+ */
+const errorSender = (customError, defaultError) => (customError ? { error: true, customError: (typeof customError === 'string' ? { message: customError, defaultError } : { customError, defaultError }) } : defaultError);
+
 /**
  * @desc VALIDATES PROVIDED FIELDS
  * @param {object} expectedRequest REQUEST TO BE PASSED
- * @param {object} requestBody REQUEST BODY
+ * @param {object} userForm REQUEST BODY
  * @param {Boolean} allowNullOrUndefinedValue CHECK FOR NULL OR UNDEFINED VALUES
  * @returns {object} JSON
  */
-const compareTwoObjectsKeys = (expectedRequest, requestBody, allowNullOrUndefinedValue) => {
+const compareTwoObjectsKeys = (expectedRequest, userForm, allowNullOrUndefinedValue) => {
   let isNullOrUndefined = false;
   const keyWithIsNullOrUndefined = [];
 
   /*eslint-disable */
-  if (allowNullOrUndefinedValue) {
+  if (!allowNullOrUndefinedValue && typeof allowNullOrUndefinedValue === 'boolean') {
   const validateDataType = (obj) => {
     for (const value in obj) {
       if (obj[value] === null) {
@@ -31,11 +40,11 @@ const compareTwoObjectsKeys = (expectedRequest, requestBody, allowNullOrUndefine
   };
     /* eslint-enable */
     validateDataType(expectedRequest);
-    validateDataType(requestBody);
+    validateDataType(userForm);
   }
 
   const mainArray = Object.keys(expectedRequest);
-  const secondaryArray = Object.keys(requestBody);
+  const secondaryArray = Object.keys(userForm);
   const result = mainArray.filter((n) => !secondaryArray.includes(n));
 
   return {
@@ -46,13 +55,13 @@ const compareTwoObjectsKeys = (expectedRequest, requestBody, allowNullOrUndefine
 /**
  * @desc VALIDATES INPUT FIELDS
  * @param {*} formType TYPE OF ACTION
- * @param {object} requestSchema THE REQUEST SCHEMA FOR VALIDATION REQUIREMENT
- * @param {object} requestBody THE REQUEST BODY TO BE VALIDATED
+ * @param {object} formSchema THE FORM SCHEMA FOR VALIDATION REQUIREMENT
+ * @param {object} userForm THE USER FORM BODY TO BE VALIDATED
  * @param {object} customError THE PREFERED RESPONSE BY USER
  * @param {Boolean} allowNullOrUndefinedValue DECLINE NULL OR UNDEFINED VALUES
  * @returns {object} JSON
  */
-exports.validateFields = (formType, requestSchema, requestBody, customError, allowNullOrUndefinedValue = false) => {
+exports.validateFields = (formType, formSchema, userForm, customError, allowNullOrUndefinedValue = true) => {
   /**
    * @desc VALIDATE PARAMS
    */
@@ -61,50 +70,50 @@ exports.validateFields = (formType, requestSchema, requestBody, customError, all
     return errorMsg('Unexpected Data-Type!', 400, 'argument', 'formType', 'Expected first argument should be string', { error: true, operationStatus: 'Processs Terminated!' });
   }
   // second parameter
-  if (typeof requestSchema === 'string' && !requestSchema) {
-    return errorMsg('Unexpected Data-Type!', 400, 'argument', 'requestSchema', 'Expected second argument to be provided', { error: true, operationStatus: 'Processs Terminated!' });
+  if (typeof formSchema === 'string' && !formSchema) {
+    return errorMsg('Unexpected Data-Type!', 400, 'argument', 'formSchema', 'Expected second argument to be provided', { error: true, operationStatus: 'Processs Terminated!' });
   }
-  if (requestSchema === null || requestSchema === undefined) {
-    return errorMsg('Unexpected Data-Type!', 400, 'argument', 'requestSchema', 'Second argument cannot be null or undefind', { error: true, operationStatus: 'Processs Terminated!' });
+  if (formSchema === null || formSchema === undefined) {
+    return errorMsg('Unexpected Data-Type!', 400, 'argument', 'formSchema', 'Second argument cannot be null or undefind', { error: true, operationStatus: 'Processs Terminated!' });
   }
-  if (typeof requestSchema !== 'object' || Array.isArray(requestSchema)) {
-    return errorMsg('Unexpected Data-Type!', 400, 'argument', 'requestSchema', 'Expected second argument to be of an object: Your request schema should follow the format below', { error: true, operationStatus: 'Processs Terminated!', format: sampleRequestSchema });
+  if (typeof formSchema !== 'object' || Array.isArray(formSchema)) {
+    return errorMsg('Unexpected Data-Type!', 400, 'argument', 'formSchema', 'Expected second argument to be of an object: Your request schema should follow the format below', { error: true, operationStatus: 'Processs Terminated!', format: sampleformSchema });
   }
-  if ((Object.keys(requestSchema).map((data) => data)).length < 1) {
-    return errorMsg('Unexpected Data', 400, 'argument', 'requestSchema', 'Request_Schema should not be empty', { error: true, operationStatus: 'Processs Terminated!' });
+  if ((Object.keys(formSchema).map((data) => data)).length < 1) {
+    return errorMsg('Unexpected Data', 400, 'argument', 'formSchema', 'Form_Schema should not be empty', { error: true, operationStatus: 'Processs Terminated!' });
   }
   let x = false;
   let xMsg = null;
 
-  Object.keys(requestSchema).forEach((request) => {
-    if (typeof requestSchema[request] !== 'object' || Array.isArray(requestSchema[request]) || requestSchema[request] == null) {
-      x = true; xMsg = errorMsg('Unexpected Data-Type!', 400, 'argument', 'requestSchema', 'Your request schema should follow the format below', { error: true, operationStatus: 'Processs Terminated!', format: sampleRequestSchema });
+  Object.keys(formSchema).forEach((request) => {
+    if (typeof formSchema[request] !== 'object' || Array.isArray(formSchema[request]) || formSchema[request] == null) {
+      x = true; xMsg = errorMsg('Unexpected Data-Type!', 400, 'argument', 'formSchema', 'Your request schema should follow the format below', { error: true, operationStatus: 'Processs Terminated!', format: sampleformSchema });
       return;
     }
-    if (typeof requestSchema[request].formType !== 'string' || !requestSchema[request].formType) {
-      x = true; xMsg = errorMsg('Unexpected Data-Type!', 400, 'argument', 'formType missing in requestSchema', 'Your request schema should follow the format below', { error: true, operationStatus: 'Processs Terminated!', format: sampleRequestSchema });
+    if (typeof formSchema[request].formType !== 'string' || !formSchema[request].formType) {
+      x = true; xMsg = errorMsg('Unexpected Data-Type!', 400, 'argument', 'formType missing in formSchema', 'Your request schema should follow the format below', { error: true, operationStatus: 'Processs Terminated!', format: sampleformSchema });
       return;
     }
 
-    const objects = Object.keys(requestSchema[request])
-      .filter((data) => typeof requestSchema[request][data] === 'object' && requestSchema[request][data] !== null && !Array.isArray(requestSchema[request][data]));
+    const objects = Object.keys(formSchema[request])
+      .filter((data) => typeof formSchema[request][data] === 'object' && formSchema[request][data] !== null && !Array.isArray(formSchema[request][data]));
 
     if (!objects.length) {
-      x = true; xMsg = errorMsg('Unexpected!', 400, 'fields-not-found', 'Form property', 'Pre-define your inputs. Follow the format below', { error: true, operationStatus: 'Processs Terminated!', format: sampleRequestSchema });
+      x = true; xMsg = errorMsg('Unexpected!', 400, 'fields-not-found', 'Form property', 'Pre-define your inputs. Follow the format below', { error: true, operationStatus: 'Processs Terminated!', format: sampleformSchema });
       return;
     }
 
     objects.forEach((key) => {
-      if (!(Object.keys(requestSchema[request][key]).map((data) => data)).length) {
-        x = true; xMsg = errorMsg('Unexpected Data!', 400, `${formType}.${key}`, `Schema.${formType}`, 'No Requirement found for input field', { error: true, operationStatus: 'Processs Terminated!', format: sampleRequestSchema });
+      if (!(Object.keys(formSchema[request][key]).map((data) => data)).length) {
+        x = true; xMsg = errorMsg('Unexpected Data!', 400, `${formType}.${key}`, `Schema.${formType}`, 'No Requirement found for input field', { error: true, operationStatus: 'Processs Terminated!', format: sampleformSchema });
         return;
       }
-      if (typeof requestSchema[request][key].field !== 'string') {
-        x = true; xMsg = errorMsg('Unexpected Data-Type!', 400, `${formType}.${key}`, `Schema.${formType}`, 'Schema object property "field" is missing or is not a string. Follow the format below', { error: true, operationStatus: 'Processs Terminated!', format: sampleRequestSchema });
+      if (typeof formSchema[request][key].field !== 'string') {
+        x = true; xMsg = errorMsg('Unexpected Data-Type!', 400, `${formType}.${key}`, `Schema.${formType}`, 'Schema object property "field" is missing or is not a string. Follow the format below', { error: true, operationStatus: 'Processs Terminated!', format: sampleformSchema });
         return;
       }
-      if (requestSchema[request][key].field.trim() === '') {
-        x = true; xMsg = errorMsg('Unexpected empty field!', 400, `${formType}.${key}`, `Schema.${formType}`, '"field" should be not be empty". Follow the format below', { error: true, operationStatus: 'Processs Terminated!', format: sampleRequestSchema });
+      if (formSchema[request][key].field.trim() === '') {
+        x = true; xMsg = errorMsg('Unexpected empty field!', 400, `${formType}.${key}`, `Schema.${formType}`, '"field" should be not be empty". Follow the format below', { error: true, operationStatus: 'Processs Terminated!', format: sampleformSchema });
       }
     });
   });
@@ -112,8 +121,8 @@ exports.validateFields = (formType, requestSchema, requestBody, customError, all
   if (x) { return xMsg; }
 
   // Third parameter
-  if (typeof requestBody !== 'object' || Array.isArray(requestSchema) || requestBody === null) {
-    return errorMsg('Expected Request-Body!', 400, 'argument', 'requestBody', 'Expected third argument to be of an object: e.g { data: "my-data-value" }', { error: true, operationStatus: 'Processs Terminated!' });
+  if (typeof userForm !== 'object' || Array.isArray(formSchema) || userForm === null) {
+    return errorMsg('Expected Request-Body!', 400, 'argument', 'userForm', 'Expected third argument to be of an object: e.g { data: "my-data-value" }', { error: true, operationStatus: 'Processs Terminated!' });
   }
 
   // set variables
@@ -130,64 +139,65 @@ exports.validateFields = (formType, requestSchema, requestBody, customError, all
   const fieldsWithObjectAsValues = [];
   let errorMessage, errorCompareKeys;
 
-  Object.keys(requestSchema).forEach((request) => {
-    if (typeof requestSchema[request].formType === 'string' && typeof formType === 'string') {
-      if (requestSchema[request].formType.toLowerCase().trim() === formType.toLowerCase().trim()) {
+  Object.keys(formSchema).forEach((request) => {
+    if (typeof formSchema[request].formType === 'string' && typeof formType === 'string') {
+      if (formSchema[request].formType.toLowerCase().trim() === formType.toLowerCase().trim()) {
         /**
          * @desc GET VALIDATION REQUIREMENTs
          */
-        Object.keys(requestSchema[request])
-          .filter((data) => typeof requestSchema[request][data] === 'object')
+        Object.keys(formSchema[request])
+          .filter((data) => typeof formSchema[request][data] === 'object')
           .forEach((keys) => {
-            expectedFields[requestSchema[request][keys].field] = '</>';
+            expectedFields[formSchema[request][keys].field] = '</>';
             // Requirement for required field
-            if (requestSchema[request][keys].required) {
-              requiredFields.push(requestSchema[request][keys]);
+            if (typeof formSchema[request][keys].required === 'boolean' && formSchema[request][keys].required) {
+              requiredFields.push(formSchema[request][keys]);
             }
             // Requirement for alpha field
-            if (requestSchema[request][keys].isAlpha) {
-              fieldsWithAlphaValues.push(requestSchema[request][keys]);
+            if (typeof formSchema[request][keys].isAlpha === 'boolean' && formSchema[request][keys].isAlpha) {
+              fieldsWithAlphaValues.push(formSchema[request][keys]);
             }
             // Requirement for decimal field
-            if (requestSchema[request][keys].isDecimal) {
-              fieldsWithDecimalValues.push(requestSchema[request][keys]);
+            if (typeof formSchema[request][keys].isDecimal === 'boolean' && formSchema[request][keys].isDecimal) {
+              fieldsWithDecimalValues.push(formSchema[request][keys]);
             }
             // Requirement for name field
-            if (requestSchema[request][keys].isName) {
-              fieldsWithNameValues.push(requestSchema[request][keys]);
+            if (typeof formSchema[request][keys].isName === 'boolean' && formSchema[request][keys].isName) {
+              fieldsWithNameValues.push(formSchema[request][keys]);
             }
             // Requirement for digit field
-            if (requestSchema[request][keys].isInteger) {
-              fieldsWithIntegerValues.push(requestSchema[request][keys]);
+            if (typeof formSchema[request][keys].isInteger === 'boolean' && formSchema[request][keys].isInteger) {
+              fieldsWithIntegerValues.push(formSchema[request][keys]);
             }
             // Requirement for email
-            if (requestSchema[request][keys].isEmail) {
-              emailField.push(requestSchema[request][keys]);
+            if (typeof formSchema[request][keys].isEmail === 'boolean' && formSchema[request][keys].isEmail) {
+              emailField.push(formSchema[request][keys]);
             }
             // Requirement for phone number validation
-            if (requestSchema[request][keys].isPhoneNumber) {
-              phoneFields.push(requestSchema[request][keys]);
+            if (typeof formSchema[request][keys].isPhoneNumber === 'boolean' && formSchema[request][keys].isPhoneNumber) {
+              phoneFields.push(formSchema[request][keys]);
             }
             // Requirement for minLength and maxLength validation
-            if (typeof requestSchema[request][keys].minLength === 'number' || typeof requestSchema[request][keys].maxLength === 'number') {
-              maxMinFields.push(requestSchema[request][keys]);
+            if (typeof formSchema[request][keys].minLength === 'number' || typeof formSchema[request][keys].maxLength === 'number') {
+              maxMinFields.push(formSchema[request][keys]);
             }
             // Requirement for array
-            if (requestSchema[request][keys].isArray) {
-              fieldsWithArrayAsValues.push(requestSchema[request][keys]);
+            if (typeof formSchema[request][keys].isArray === 'boolean' && formSchema[request][keys].isArray) {
+              fieldsWithArrayAsValues.push(formSchema[request][keys]);
             }
             // Requirement for object not null
-            if (requestSchema[request][keys].isObject) {
-              fieldsWithObjectAsValues.push(requestSchema[request][keys]);
+            if (typeof formSchema[request][keys].isObject === 'boolean' && formSchema[request][keys].isObject) {
+              fieldsWithObjectAsValues.push(formSchema[request][keys]);
             }
           });
 
         /**
          * @desc Find MISSING KEYS IN USER'S REQUEST-BODY
          */
-        const foundMissingKeys = compareTwoObjectsKeys(expectedFields, requestBody, allowNullOrUndefinedValue);
+        const foundMissingKeys = compareTwoObjectsKeys(expectedFields, userForm, allowNullOrUndefinedValue);
         if (foundMissingKeys.missingFields.length || foundMissingKeys.isNullOrUndefined) {
-          errorCompareKeys = customError ? { error: true, data: (typeof customError === 'string' ? { message: customError } : customError) } : errorMsg(`${foundMissingKeys.isNullOrUndefined ? 'Object Property (value: null or undefined not accepted)' : 'Missing Fields'}`, 400, `${foundMissingKeys.missingFields.length ? foundMissingKeys.missingFields : foundMissingKeys.keyWithIsNullOrUndefined}`, 'Request Body', `${foundMissingKeys.isNullOrUndefined ? 'Value null or undefined not accepted. Replace (null or undefined) with empty string, if you mean to return nothing' : `There are ${foundMissingKeys.count} fields missing in your request: ${foundMissingKeys.missingFields}`}`, { error: true, operationStatus: 'Processs Terminated!' });
+          const defaultError = errorMsg(`${foundMissingKeys.isNullOrUndefined ? 'Object Property (value: null or undefined not accepted)' : 'Missing Fields'}`, 400, `${foundMissingKeys.missingFields.length ? foundMissingKeys.missingFields : foundMissingKeys.keyWithIsNullOrUndefined}`, 'userForm', `${foundMissingKeys.isNullOrUndefined ? 'Value null or undefined not accepted. Replace (null or undefined) with empty string, if you mean to return nothing' : `There are ${foundMissingKeys.count} fields missing in your request: ${foundMissingKeys.missingFields}`}`, { error: true, operationStatus: 'Processs Terminated!' });
+          errorCompareKeys = errorSender(customError, defaultError);
         }
 
         /**
@@ -195,10 +205,11 @@ exports.validateFields = (formType, requestSchema, requestBody, customError, all
          */
         if (requiredFields.length) {
           requiredFields.forEach((obj) => {
-            Object.keys(requestBody).forEach((key) => {
+            Object.keys(userForm).forEach((key) => {
               if (obj.field === key) {
-                if (isEmpty(requestBody[key]) || !requestBody[key]) {
-                  errorMessage = customError ? { error: true, data: (typeof customError === 'string' ? { message: customError } : customError) } : errorMsg('Validation Error', 400, `${obj.field}`, `${formType}`, `${splitCamelCaseWord(obj.field)} cannot be empty`, { error: true, operationStatus: 'Processs Terminated!' });
+                if (isEmpty(userForm[key]) || !userForm[key]) {
+                  const defaultError = errorMsg('Validation Error', 400, `${obj.field}`, `${formType}`, `${splitCamelCaseWord(obj.field)} cannot be empty`, { error: true, operationStatus: 'Processs Terminated!' });
+                  errorMessage = errorSender(customError, defaultError);
                 }
               }
             });
@@ -209,10 +220,11 @@ exports.validateFields = (formType, requestSchema, requestBody, customError, all
          * @desc VALIDATE FOR EMAIL FIELDs
          */
         if (emailField.length) {
-          Object.keys(requestBody).forEach((key) => {
+          Object.keys(userForm).forEach((key) => {
             emailField.forEach((obj) => {
-              if (key === obj.field && !isEmail(requestBody[key])) {
-                errorMessage = customError ? { error: true, data: (typeof customError === 'string' ? { message: customError } : customError) } : errorMsg('Validation Error', 422, `${obj.field}`, `${formType}`, `${splitCamelCaseWord(obj.field)} is invalid. Email should look like e.g example@mail.com`, { error: true, operationStatus: 'Processs Terminated!' });
+              if (key === obj.field && !isEmail(userForm[key])) {
+                const defaultError = errorMsg('Validation Error', 422, `${obj.field}`, `${formType}`, `${splitCamelCaseWord(obj.field)} is invalid. Email should look like e.g example@mail.com`, { error: true, operationStatus: 'Processs Terminated!' });
+                errorMessage = errorSender(customError, defaultError);
               }
             });
           });
@@ -222,10 +234,11 @@ exports.validateFields = (formType, requestSchema, requestBody, customError, all
          * @desc VALIDATE FOR PHONE FIELD
          */
         if (phoneFields.length) {
-          Object.keys(requestBody).forEach((key) => {
+          Object.keys(userForm).forEach((key) => {
             phoneFields.forEach((obj) => {
-              if (obj.field === key && !isPhoneNumber(requestBody[key])) {
-                errorMessage = customError ? { error: true, data: (typeof customError === 'string' ? { message: customError } : customError) } : errorMsg('Validation Error', 422, `${key}`, `${formType}`, `${splitCamelCaseWord(obj.field)} is invalid. You can try using a number like +2348180000009`, { error: true, operationStatus: 'Processs Terminated!' });
+              if (obj.field === key && !isPhoneNumber(userForm[key])) {
+                const defaultError = errorMsg('Validation Error', 422, `${key}`, `${formType}`, `${splitCamelCaseWord(obj.field)} is invalid. You can try using a number like +2348180000009`, { error: true, operationStatus: 'Processs Terminated!' });
+                errorMessage = errorSender(customError, defaultError);
               }
             });
           });
@@ -235,11 +248,12 @@ exports.validateFields = (formType, requestSchema, requestBody, customError, all
          * @desc VALIDATE FOR MAX AND MIN LENGTH
          */
         if (maxMinFields.length) {
-          Object.keys(requestBody).forEach((key) => {
+          Object.keys(userForm).forEach((key) => {
             maxMinFields.forEach((obj) => {
               if (obj.field === key) {
-                if (requestBody[key].length < obj.minLength || requestBody[key].length > obj.maxLength) {
-                  errorMessage = customError ? { error: true, data: (typeof customError === 'string' ? { message: customError } : customError) } : errorMsg('Validation Error', 400, `${key}`, `${formType}`, `The minLength characters expected for this field: ${splitCamelCaseWord(obj.field)}, is ${obj.minLength} with a maxLength of ${obj.maxLength}.`, { error: true, operationStatus: 'Processs Terminated!' });
+                if (userForm[key].length < obj.minLength || userForm[key].length > obj.maxLength) {
+                  const defaultError = errorMsg('Validation Error', 400, `${key}`, `${formType}`, `The minLength characters expected for this field: ${splitCamelCaseWord(obj.field)}, is ${obj.minLength} with a maxLength of ${obj.maxLength}.`, { error: true, operationStatus: 'Processs Terminated!' });
+                  errorMessage = errorSender(customError, defaultError);
                 }
               }
             });
@@ -250,10 +264,11 @@ exports.validateFields = (formType, requestSchema, requestBody, customError, all
          * @desc VALIDATE FOR ARRAY VALUES
          */
         if (fieldsWithArrayAsValues.length) {
-          Object.keys(requestBody).forEach((key) => {
+          Object.keys(userForm).forEach((key) => {
             fieldsWithArrayAsValues.forEach((obj) => {
-              if (obj.field === key && !Array.isArray(requestBody[key])) {
-                errorMessage = customError ? { error: true, data: (typeof customError === 'string' ? { message: customError } : customError) } : errorMsg('Validation Error', 400, `${key}`, `${formType}`, `${splitCamelCaseWord(obj.field)} should be an array dataType`, { error: true, operationStatus: 'Processs Terminated!' });
+              if (obj.field === key && !Array.isArray(userForm[key])) {
+                const defaultError = errorMsg('Validation Error', 400, `${key}`, `${formType}`, `${splitCamelCaseWord(obj.field)} should be an array dataType`, { error: true, operationStatus: 'Processs Terminated!' });
+                errorMessage = errorSender(customError, defaultError);
               }
             });
           });
@@ -263,10 +278,11 @@ exports.validateFields = (formType, requestSchema, requestBody, customError, all
          * @desc VALIDATE FOR OBJECTS AS VALUE
          */
         if (fieldsWithObjectAsValues.length) {
-          Object.keys(requestBody).forEach((key) => {
+          Object.keys(userForm).forEach((key) => {
             fieldsWithObjectAsValues.forEach((obj) => {
-              if (obj.field === key && typeof requestBody[key] !== 'object' && requestBody[key] !== null) {
-                errorMessage = customError ? { error: true, data: (typeof customError === 'string' ? { message: customError } : customError) } : errorMsg('Validation Error', 400, `${key}`, `${formType}`, `${splitCamelCaseWord(obj.field)} should be an object literal dataType`, { error: true, operationStatus: 'Processs Terminated!' });
+              if (obj.field === key && typeof userForm[key] !== 'object' && userForm[key] !== null) {
+                const defaultError = errorMsg('Validation Error', 400, `${key}`, `${formType}`, `${splitCamelCaseWord(obj.field)} should be an object literal dataType`, { error: true, operationStatus: 'Processs Terminated!' });
+                errorMessage = errorSender(customError, defaultError);
               }
             });
           });
@@ -276,10 +292,11 @@ exports.validateFields = (formType, requestSchema, requestBody, customError, all
          * @desc VALIDATE FOR DECIMAL VALUE
          */
         if (fieldsWithDecimalValues.length) {
-          Object.keys(requestBody).forEach((key) => {
+          Object.keys(userForm).forEach((key) => {
             fieldsWithDecimalValues.forEach((obj) => {
-              if (obj.field === key && (!isDecimal(requestBody[key]) || !requestBody[key])) {
-                errorMessage = customError ? { error: true, data: (typeof customError === 'string' ? { message: customError } : customError) } : errorMsg('Validation Error', 400, `${key}`, `${formType}`, `${splitCamelCaseWord(obj.field)} should be a decimal value`, { error: true, operationStatus: 'Processs Terminated!' });
+              if (obj.field === key && (!isDecimal(userForm[key]) || !userForm[key])) {
+                const defaultError = errorMsg('Validation Error', 400, `${key}`, `${formType}`, `${splitCamelCaseWord(obj.field)} should be a decimal value`, { error: true, operationStatus: 'Processs Terminated!' });
+                errorMessage = errorSender(customError, defaultError);
               }
             });
           });
@@ -289,10 +306,11 @@ exports.validateFields = (formType, requestSchema, requestBody, customError, all
          * @desc VALIDATE FOR ALPHA VALUE
          */
         if (fieldsWithAlphaValues.length) {
-          Object.keys(requestBody).forEach((key) => {
+          Object.keys(userForm).forEach((key) => {
             fieldsWithAlphaValues.forEach((obj) => {
-              if (obj.field === key && (!isAlpha(requestBody[key]) || !requestBody[key])) {
-                errorMessage = customError ? { error: true, data: (typeof customError === 'string' ? { message: customError } : customError) } : errorMsg('Validation Error', 400, `${key}`, `${formType}`, `${splitCamelCaseWord(obj.field)} should only be alphabets`, { error: true, operationStatus: 'Processs Terminated!' });
+              if (obj.field === key && (!isAlpha(userForm[key]) || !userForm[key])) {
+                const defaultError = errorMsg('Validation Error', 400, `${key}`, `${formType}`, `${splitCamelCaseWord(obj.field)} should only be alphabets`, { error: true, operationStatus: 'Processs Terminated!' });
+                errorMessage = errorSender(customError, defaultError);
               }
             });
           });
@@ -302,10 +320,11 @@ exports.validateFields = (formType, requestSchema, requestBody, customError, all
          * @desc VALIDATE FOR DIGITS VALUE
          */
         if (fieldsWithIntegerValues.length) {
-          Object.keys(requestBody).forEach((key) => {
+          Object.keys(userForm).forEach((key) => {
             fieldsWithIntegerValues.forEach((obj) => {
-              if (obj.field === key && (!isInteger(requestBody[key]) || !requestBody[key])) {
-                errorMessage = customError ? { error: true, data: (typeof customError === 'string' ? { message: customError } : customError) } : errorMsg('Validation Error', 400, `${key}`, `${formType}`, `${splitCamelCaseWord(obj.field)} should only be integers`, { error: true, operationStatus: 'Processs Terminated!' });
+              if (obj.field === key && (!isInteger(userForm[key]) || !userForm[key])) {
+                const defaultError = errorMsg('Validation Error', 400, `${key}`, `${formType}`, `${splitCamelCaseWord(obj.field)} should only be integers`, { error: true, operationStatus: 'Processs Terminated!' });
+                errorMessage = errorSender(customError, defaultError);
               }
             });
           });
@@ -314,11 +333,12 @@ exports.validateFields = (formType, requestSchema, requestBody, customError, all
          * @desc VALIDATE FOR NAMES VALUE
          */
         if (fieldsWithNameValues.length) {
-          Object.keys(requestBody).forEach((key) => {
+          Object.keys(userForm).forEach((key) => {
             fieldsWithNameValues.forEach((obj) => {
               if (obj.field === key) {
-                if (!isName(requestBody[key]) || !requestBody[key]) {
-                  errorMessage = customError ? { error: true, data: (typeof customError === 'string' ? { message: customError } : customError) } : errorMsg('Validation Error', 400, `${key}`, `${formType}`, `${splitCamelCaseWord(obj.field)} should be a proper name, and it should not contain special characters like: (#@$!±^&*+=">?{</}_|)`, { error: true, operationStatus: 'Processs Terminated!' });
+                if (!isName(userForm[key]) || !userForm[key]) {
+                  const defaultError = errorMsg('Validation Error', 400, `${key}`, `${formType}`, `${splitCamelCaseWord(obj.field)} should be a proper name, and it should not contain special characters like: (#@$!±^&*+=">?{</}_|)`, { error: true, operationStatus: 'Processs Terminated!' });
+                  errorMessage = errorSender(customError, defaultError);
                 }
               }
             });

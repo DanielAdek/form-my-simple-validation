@@ -89,7 +89,7 @@ describe('VALIDATION', () => {
       expect(validate.error.error).equal(true);
       expect(validate.error.details.error).equal(true);
       expect(validate.error.metadata[0].field).equal('argument');
-      expect(validate.error.metadata[0].target).equal('requestSchema');
+      expect(validate.error.metadata[0].target).equal('formSchema');
       expect(validate.error.metadata[0].statusCode).equal(400);
       expect(validate.error.Stacktrace).equal('Unexpected Data-Type!');
       expect(validate.error.details.operationStatus).equal('Processs Terminated!');
@@ -132,7 +132,7 @@ describe('VALIDATION', () => {
       expect(validate.error.error).equal(true);
       expect(validate.error.details.error).equal(true);
       expect(validate.error.metadata[0].field).equal('argument');
-      expect(validate.error.metadata[0].target).equal('requestSchema');
+      expect(validate.error.metadata[0].target).equal('formSchema');
       expect(validate.error.metadata[0].statusCode).equal(400);
       expect(validate.error.Stacktrace).equal('Unexpected Data-Type!');
       expect(validate.error.details.operationStatus).equal('Processs Terminated!');
@@ -174,7 +174,7 @@ describe('VALIDATION', () => {
       expect(validate.error.error).equal(true);
       expect(validate.error.details.error).equal(true);
       expect(validate.error.metadata[0].field).equal('argument');
-      expect(validate.error.metadata[0].target).equal('requestSchema');
+      expect(validate.error.metadata[0].target).equal('formSchema');
       expect(validate.error.metadata[0].statusCode).equal(400);
       expect(validate.error.Stacktrace).equal('Unexpected Data-Type!');
       expect(validate.error.details.operationStatus).equal('Processs Terminated!');
@@ -182,7 +182,7 @@ describe('VALIDATION', () => {
     });
 
 
-    it('Should return an object containing message (Request_Schema should not be empty)', () => {
+    it('Should return an object containing message (Form_Schema should not be empty)', () => {
       const validate = Form.validateFields('login', {});
       /**
        * @desc TEST FOR PROPERTIES
@@ -217,11 +217,11 @@ describe('VALIDATION', () => {
       expect(validate.error.error).equal(true);
       expect(validate.error.details.error).equal(true);
       expect(validate.error.metadata[0].field).equal('argument');
-      expect(validate.error.metadata[0].target).equal('requestSchema');
+      expect(validate.error.metadata[0].target).equal('formSchema');
       expect(validate.error.metadata[0].statusCode).equal(400);
       expect(validate.error.Stacktrace).equal('Unexpected Data');
       expect(validate.error.details.operationStatus).equal('Processs Terminated!');
-      expect(validate.error.message).equal('Request_Schema should not be empty');
+      expect(validate.error.message).equal('Form_Schema should not be empty');
     });
 
 
@@ -260,7 +260,7 @@ describe('VALIDATION', () => {
       expect(validate.error.error).equal(true);
       expect(validate.error.details.error).equal(true);
       expect(validate.error.metadata[0].field).equal('argument');
-      expect(validate.error.metadata[0].target).equal('requestSchema');
+      expect(validate.error.metadata[0].target).equal('formSchema');
       expect(validate.error.metadata[0].statusCode).equal(400);
       expect(validate.error.Stacktrace).equal('Unexpected Data-Type!');
       expect(validate.error.details.operationStatus).equal('Processs Terminated!');
@@ -303,7 +303,7 @@ describe('VALIDATION', () => {
       expect(validate.error.error).equal(true);
       expect(validate.error.details.error).equal(true);
       expect(validate.error.metadata[0].field).equal('argument');
-      expect(validate.error.metadata[0].target).equal('requestSchema');
+      expect(validate.error.metadata[0].target).equal('formSchema');
       expect(validate.error.metadata[0].statusCode).equal(400);
       expect(validate.error.Stacktrace).equal('Unexpected Data-Type!');
       expect(validate.error.details.operationStatus).equal('Processs Terminated!');
@@ -349,7 +349,7 @@ describe('VALIDATION', () => {
       expect(validate.error.metadata[0].field).equal('argument');
       expect(validate.error.Stacktrace).equal('Unexpected Data-Type!');
       expect(validate.error.details.operationStatus).equal('Processs Terminated!');
-      expect(validate.error.metadata[0].target).equal('formType missing in requestSchema');
+      expect(validate.error.metadata[0].target).equal('formType missing in formSchema');
       expect(validate.error.message).equal('Your request schema should follow the format below');
     });
 
@@ -606,7 +606,7 @@ describe('VALIDATION', () => {
       expect(validate.error.metadata[0].statusCode).equal(400);
       expect(validate.error.Stacktrace).equal('Expected Request-Body!');
       expect(validate.error.metadata[0].field).equal('argument');
-      expect(validate.error.metadata[0].target).equal('requestBody');
+      expect(validate.error.metadata[0].target).equal('userForm');
       expect(validate.error.details.operationStatus).equal('Processs Terminated!');
       expect(validate.error.message).equal('Expected third argument to be of an object: e.g { data: "my-data-value" }');
     });

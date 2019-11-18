@@ -56,7 +56,7 @@ describe('FORM VALIDATION', () => {
     expect(validate.error.error).equal(true);
     expect(validate.error.details.error).equal(true);
     expect(validate.error.metadata[0].field).equal('email,password');
-    expect(validate.error.metadata[0].target).equal('Request Body');
+    expect(validate.error.metadata[0].target).equal('userForm');
     expect(validate.error.metadata[0].statusCode).equal(400);
     expect(validate.error.Stacktrace).equal('Missing Fields');
     expect(validate.error.details.operationStatus).equal('Processs Terminated!');
@@ -153,7 +153,7 @@ describe('FORM VALIDATION', () => {
 
   it('Should return an object containing message (Value null or undefined not accepted. Replace (null or undefined) with empty string, if you mean to return nothing)', () => {
     const form = { email: 'you@email.com', password: null };
-    const validate = Form.validateFields('login', formSchema, form, null, true);
+    const validate = Form.validateFields('login', formSchema, form, null, false);
     /**
        * @desc TEST FOR PROPERTIES
        */
@@ -187,7 +187,7 @@ describe('FORM VALIDATION', () => {
     expect(validate.error.error).equal(true);
     expect(validate.error.details.error).equal(true);
     expect(validate.error.metadata[0].field).equal('password');
-    expect(validate.error.metadata[0].target).equal('Request Body');
+    expect(validate.error.metadata[0].target).equal('userForm');
     expect(validate.error.metadata[0].statusCode).equal(400);
     expect(validate.error.Stacktrace).equal('Object Property (value: null or undefined not accepted)');
     expect(validate.error.details.operationStatus).equal('Processs Terminated!');
