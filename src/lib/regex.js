@@ -57,6 +57,6 @@ const isPhoneNumber = (value) => /^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\./0-9]*$/.
  */
 const splitCamelCaseWord = (word) => word.replace(/([a-z])([A-Z])/g, '$1 $2').toUpperCase();
 
-export {
+module.exports = {
   isAlpha, isDecimal, isEmail, isEmpty, isPhoneNumber, isInteger, isName, splitCamelCaseWord
 };

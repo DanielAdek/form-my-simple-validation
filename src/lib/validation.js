@@ -1,9 +1,9 @@
-import { errorMsg, sampleformSchema } from './message';
-import {
+const { errorMsg, sampleformSchema } = require('./message');
+const {
   isEmail, isAlpha, isDecimal,
   isEmpty, isPhoneNumber, isName,
   isInteger, splitCamelCaseWord
-} from './regex';
+} = require('./regex');
 
 /**
  * @desc SENDS ERROR TO USER

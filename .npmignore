@@ -50,3 +50,6 @@ export_env.bash
 .vscode
 
 .compiled
+
+.editor.config
+

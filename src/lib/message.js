@@ -8,7 +8,7 @@
  * @param {*} details MORE ERROR DETAILS
  * @returns {object} JSON
  */
-export const errorMsg = (Stacktrace, statusCode, field, target, message, details) => ({
+exports.errorMsg = (Stacktrace, statusCode, field, target, message, details) => ({
   error: {
     error: true,
     Stacktrace,
@@ -27,7 +27,7 @@ export const errorMsg = (Stacktrace, statusCode, field, target, message, details
 /**
  * @desc SAMPLE REQUEST SCHEMA
  */
-export const sampleRequestSchema = {
+exports.sampleRequestSchema = {
   login: {
     formType: 'login',
     dataField: { field: 'email', required: true, isEmail: true },
