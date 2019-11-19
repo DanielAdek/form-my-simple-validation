@@ -5,7 +5,7 @@
 ## Table of Contents
 
  * [Introduction](#introduction)
- * [Install](#install)
+ * [Installation](#installation)
  * [Usage](#usage)
     * [params](#_params_)
     * [Usage example](#usage-example)
@@ -165,6 +165,8 @@ Following is a table of the options you can use in your schema for validation re
 | `isObject`               | `true` or `false` (Boolean)         | Only allows object as value |
 
 
-### License
+## License
+---
+[The MIT License](https://choosealicense.com/licenses/mit/)
 
-#### MIT
+***Copyright &copy; 2019 DanielAdek***
