@@ -1,6 +1,6 @@
 # form-my-simple-validation
 
-[![Build Status](https://travis-ci.com/DanielAdek/form-my-simple-validation.svg?branch=master)](https://travis-ci.com/DanielAdek/form-my-simple-validation) [![Coverage Status](https://coveralls.io/repos/github/DanielAdek/form-my-simple-validation/badge.svg?branch=master)](https://coveralls.io/github/DanielAdek/form-my-simple-validation?branch=master) [![Maintainability](https://api.codeclimate.com/v1/badges/a0b8deaadc35c112e8de/maintainability)](https://codeclimate.com/github/DanielAdek/form-my-simple-validation/maintainability)
+[![Build Status](https://travis-ci.com/DanielAdek/form-my-simple-validation.svg?branch=master)](https://travis-ci.com/DanielAdek/form-my-simple-validation) [![Coverage Status](https://coveralls.io/repos/github/DanielAdek/form-my-simple-validation/badge.svg?branch=master)](https://coveralls.io/github/DanielAdek/form-my-simple-validation?branch=master) [![Maintainability](https://api.codeclimate.com/v1/badges/a0b8deaadc35c112e8de/maintainability)](https://codeclimate.com/github/DanielAdek/form-my-simple-validation/maintainability) [![npm version](https://badge.fury.io/js/form-my-simple-validation.svg)](https://badge.fury.io/js/form-my-simple-validation) [![dependency badge](https://david-dm.org/DanielAdek/form-my-simple-validation.svg)](https://david-dm.org/DanielAdek/form-my-simple-validation.svg) [![license](https://img.shields.io/github/license/DanielAdek/form-my-simple-validation)](https://img.shields.io/github/license/DanielAdek/form-my-simple-validation) [![issues](https://img.shields.io/github/issues/DanielAdek/form-my-simple-validation)](https://img.shields.io/github/issues/DanielAdek/form-my-simple-validation)
 
 ## Table of Contents
 
@@ -164,3 +164,7 @@ Following is a table of the options you can use in your schema for validation re
 | `isArray`                | `true` or `false` (Boolean)              | This only allows array as the value. |
 | `isObject`               | `true` or `false` (Boolean)         | Only allows object as value |
 
+
+### License
+
+#### MIT

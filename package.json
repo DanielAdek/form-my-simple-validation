@@ -25,11 +25,17 @@
     "nyc": "^14.1.1"
   },
   "keywords": [
+    "Form",
+    "Fields",
     "Validation"
   ],
   "scripts": {
     "coverage": "nyc report --reporter=text-lcov | coveralls",
     "start": "babel-node app.js",
     "test": "nyc mocha src/test/**.spec.js --require babel-core/register --exit"
+  },
+  "engines": {
+    "node": "v10.16.3",
+    "npm": "6.9.0"
   }
 }
