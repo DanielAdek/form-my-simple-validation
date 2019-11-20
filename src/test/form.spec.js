@@ -64,7 +64,7 @@ describe('FORM VALIDATION', () => {
   });
 
 
-  it('Should return an object containing message with value string', () => {
+  it('Should return an object containing message (EMAIL cannot be empty)', () => {
     const form = { email: '', password: '1234567890' };
     const validate = Form.validateFields('login', formSchema, form);
     /**
@@ -101,8 +101,52 @@ describe('FORM VALIDATION', () => {
     expect(validate.error.details.error).equal(true);
     expect(validate.error.metadata[0].field).equal('email');
     expect(validate.error.metadata[0].target).equal('login');
+    expect(validate.error.metadata[0].statusCode).equal(400);
+    expect(validate.error.Stacktrace).equal('ValidationError');
+    expect(validate.error.details.operationStatus).equal('Processs Terminated!');
+    expect(validate.error.message).equal('EMAIL cannot be empty');
+  });
+
+
+  it('Should return an object containing message with value string', () => {
+    const form = { email: 'fakemail', password: '1234567890' };
+    const validate = Form.validateFields('login', formSchema, form);
+    /**
+       * @desc TEST FOR PROPERTIES
+       */
+    expect(validate.error).property('error');
+    expect(validate.error).property('details');
+    expect(validate.error).property('message');
+    expect(validate.error).property('metadata');
+    expect(validate.error).property('Stacktrace');
+    expect(validate.error.details).property('error');
+    expect(validate.error.metadata[0]).property('field');
+    expect(validate.error.metadata[0]).property('target');
+    expect(validate.error.metadata[0]).property('statusCode');
+    expect(validate.error.details).property('operationStatus');
+    /**
+       * @desc TEST FOR DATA-TYPES
+       */
+    expect(typeof validate).equal('object');
+    expect(typeof validate.error).equal('object');
+    expect(typeof validate.error.error).equal('boolean');
+    expect(typeof validate.error.message).equal('string');
+    expect(typeof validate.error.metadata).equal('object');
+    expect(typeof validate.error.Stacktrace).equal('string');
+    expect(typeof validate.error.details.error).equal('boolean');
+    expect(typeof validate.error.metadata[0].field).equal('string');
+    expect(typeof validate.error.metadata[0].target).equal('string');
+    expect(typeof validate.error.metadata[0].statusCode).equal('number');
+    expect(typeof validate.error.details.operationStatus).equal('string');
+    /**
+       * @desc TEST FOR VALUES
+       */
+    expect(validate.error.error).equal(true);
+    expect(validate.error.details.error).equal(true);
+    expect(validate.error.metadata[0].field).equal('email');
+    expect(validate.error.metadata[0].target).equal('login');
     expect(validate.error.metadata[0].statusCode).equal(422);
-    expect(validate.error.Stacktrace).equal('Validation Error');
+    expect(validate.error.Stacktrace).equal('ValidationError');
     expect(validate.error.details.operationStatus).equal('Processs Terminated!');
     expect(validate.error.message).equal('EMAIL is invalid. Email should look like e.g example@mail.com');
   });
@@ -145,7 +189,7 @@ describe('FORM VALIDATION', () => {
     expect(validate.error.metadata[0].field).equal('password');
     expect(validate.error.metadata[0].target).equal('login');
     expect(validate.error.metadata[0].statusCode).equal(400);
-    expect(validate.error.Stacktrace).equal('Validation Error');
+    expect(validate.error.Stacktrace).equal('ValidationError');
     expect(validate.error.details.operationStatus).equal('Processs Terminated!');
     expect(validate.error.message).equal('PASSWORD cannot be empty');
   });
@@ -235,7 +279,7 @@ describe('FORM VALIDATION', () => {
     expect(validate.error.metadata[0].field).equal('password');
     expect(validate.error.metadata[0].target).equal('signup');
     expect(validate.error.metadata[0].statusCode).equal(400);
-    expect(validate.error.Stacktrace).equal('Validation Error');
+    expect(validate.error.Stacktrace).equal('ValidationError');
     expect(validate.error.details.operationStatus).equal('Processs Terminated!');
     expect(validate.error.message).equal('The minLength characters expected for this field: PASSWORD, is 8 with a maxLength of 15.');
   });
@@ -281,7 +325,7 @@ describe('FORM VALIDATION', () => {
     expect(validate.error.metadata[0].field).equal('password');
     expect(validate.error.metadata[0].target).equal('signup');
     expect(validate.error.metadata[0].statusCode).equal(400);
-    expect(validate.error.Stacktrace).equal('Validation Error');
+    expect(validate.error.Stacktrace).equal('ValidationError');
     expect(validate.error.details.operationStatus).equal('Processs Terminated!');
     expect(validate.error.message).equal('The minLength characters expected for this field: PASSWORD, is 8 with a maxLength of 15.');
   });
@@ -326,10 +370,56 @@ describe('FORM VALIDATION', () => {
     expect(validate.error.details.error).equal(true);
     expect(validate.error.metadata[0].statusCode).equal(422);
     expect(validate.error.metadata[0].target).equal('signup');
-    expect(validate.error.Stacktrace).equal('Validation Error');
+    expect(validate.error.Stacktrace).equal('ValidationError');
     expect(validate.error.metadata[0].field).equal('phoneNumber');
     expect(validate.error.details.operationStatus).equal('Processs Terminated!');
     expect(validate.error.message).equal('PHONE NUMBER is invalid. You can try using a number like +2348180000009');
+  });
+
+
+  it('Should return an object containing message (PHONE NUMBER cannot be empty)', () => {
+    const form = {
+      fullName: 'Daniel Adek', phoneNumber: '', email: 'you@email.com', password: '12345678'
+    };
+    const validate = Form.validateFields('signup', formSchema, form);
+    /**
+       * @desc TEST FOR PROPERTIES
+       */
+    expect(validate.error).property('error');
+    expect(validate.error).property('details');
+    expect(validate.error).property('message');
+    expect(validate.error).property('metadata');
+    expect(validate.error).property('Stacktrace');
+    expect(validate.error.details).property('error');
+    expect(validate.error.metadata[0]).property('field');
+    expect(validate.error.metadata[0]).property('target');
+    expect(validate.error.metadata[0]).property('statusCode');
+    expect(validate.error.details).property('operationStatus');
+    /**
+       * @desc TEST FOR DATA-TYPES
+       */
+    expect(typeof validate).equal('object');
+    expect(typeof validate.error).equal('object');
+    expect(typeof validate.error.error).equal('boolean');
+    expect(typeof validate.error.message).equal('string');
+    expect(typeof validate.error.metadata).equal('object');
+    expect(typeof validate.error.Stacktrace).equal('string');
+    expect(typeof validate.error.details.error).equal('boolean');
+    expect(typeof validate.error.metadata[0].field).equal('string');
+    expect(typeof validate.error.metadata[0].target).equal('string');
+    expect(typeof validate.error.metadata[0].statusCode).equal('number');
+    expect(typeof validate.error.details.operationStatus).equal('string');
+    /**
+       * @desc TEST FOR VALUES
+       */
+    expect(validate.error.error).equal(true);
+    expect(validate.error.details.error).equal(true);
+    expect(validate.error.metadata[0].statusCode).equal(400);
+    expect(validate.error.metadata[0].target).equal('signup');
+    expect(validate.error.Stacktrace).equal('ValidationError');
+    expect(validate.error.metadata[0].field).equal('phoneNumber');
+    expect(validate.error.details.operationStatus).equal('Processs Terminated!');
+    expect(validate.error.message).equal('PHONE NUMBER cannot be empty');
   });
 
 
@@ -373,7 +463,7 @@ describe('FORM VALIDATION', () => {
     expect(validate.error.metadata[0].statusCode).equal(400);
     expect(validate.error.metadata[0].target).equal('signup');
     expect(validate.error.metadata[0].field).equal('fullName');
-    expect(validate.error.Stacktrace).equal('Validation Error');
+    expect(validate.error.Stacktrace).equal('ValidationError');
     expect(validate.error.details.operationStatus).equal('Processs Terminated!');
     expect(validate.error.message).equal('FULL NAME should be a proper name, and it should not contain special characters like: (#@$!±^&*+=">?{</}_|)');
   });

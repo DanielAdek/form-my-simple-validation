@@ -208,7 +208,7 @@ exports.validateFields = (formType, formSchema, userForm, customError, allowNull
             Object.keys(userForm).forEach((key) => {
               if (obj.field === key) {
                 if (isEmpty(userForm[key]) || !userForm[key]) {
-                  const defaultError = errorMsg('Validation Error', 400, `${obj.field}`, `${formType}`, `${splitCamelCaseWord(obj.field)} cannot be empty`, { error: true, operationStatus: 'Processs Terminated!' });
+                  const defaultError = errorMsg('ValidationError', 400, `${obj.field}`, `${formType}`, `${splitCamelCaseWord(obj.field)} cannot be empty`, { error: true, operationStatus: 'Processs Terminated!' });
                   errorMessage = errorSender(customError, defaultError);
                 }
               }
@@ -222,9 +222,11 @@ exports.validateFields = (formType, formSchema, userForm, customError, allowNull
         if (emailField.length) {
           Object.keys(userForm).forEach((key) => {
             emailField.forEach((obj) => {
-              if (key === obj.field && !isEmail(userForm[key])) {
-                const defaultError = errorMsg('Validation Error', 422, `${obj.field}`, `${formType}`, `${splitCamelCaseWord(obj.field)} is invalid. Email should look like e.g example@mail.com`, { error: true, operationStatus: 'Processs Terminated!' });
-                errorMessage = errorSender(customError, defaultError);
+              if (userForm[key]) {
+                if (key === obj.field && !isEmail(userForm[key])) {
+                  const defaultError = errorMsg('ValidationError', 422, `${obj.field}`, `${formType}`, `${splitCamelCaseWord(obj.field)} is invalid. Email should look like e.g example@mail.com`, { error: true, operationStatus: 'Processs Terminated!' });
+                  errorMessage = errorSender(customError, defaultError);
+                }
               }
             });
           });
@@ -236,9 +238,11 @@ exports.validateFields = (formType, formSchema, userForm, customError, allowNull
         if (phoneFields.length) {
           Object.keys(userForm).forEach((key) => {
             phoneFields.forEach((obj) => {
-              if (obj.field === key && !isPhoneNumber(userForm[key])) {
-                const defaultError = errorMsg('Validation Error', 422, `${key}`, `${formType}`, `${splitCamelCaseWord(obj.field)} is invalid. You can try using a number like +2348180000009`, { error: true, operationStatus: 'Processs Terminated!' });
-                errorMessage = errorSender(customError, defaultError);
+              if (userForm[key]) {
+                if (obj.field === key && !isPhoneNumber(userForm[key])) {
+                  const defaultError = errorMsg('ValidationError', 422, `${key}`, `${formType}`, `${splitCamelCaseWord(obj.field)} is invalid. You can try using a number like +2348180000009`, { error: true, operationStatus: 'Processs Terminated!' });
+                  errorMessage = errorSender(customError, defaultError);
+                }
               }
             });
           });
@@ -251,9 +255,11 @@ exports.validateFields = (formType, formSchema, userForm, customError, allowNull
           Object.keys(userForm).forEach((key) => {
             maxMinFields.forEach((obj) => {
               if (obj.field === key) {
-                if (userForm[key].length < obj.minLength || userForm[key].length > obj.maxLength) {
-                  const defaultError = errorMsg('Validation Error', 400, `${key}`, `${formType}`, `The minLength characters expected for this field: ${splitCamelCaseWord(obj.field)}, is ${obj.minLength} with a maxLength of ${obj.maxLength}.`, { error: true, operationStatus: 'Processs Terminated!' });
-                  errorMessage = errorSender(customError, defaultError);
+                if (userForm[key]) {
+                  if (userForm[key].length < obj.minLength || userForm[key].length > obj.maxLength) {
+                    const defaultError = errorMsg('ValidationError', 400, `${key}`, `${formType}`, `The minLength characters expected for this field: ${splitCamelCaseWord(obj.field)}, is ${obj.minLength} with a maxLength of ${obj.maxLength}.`, { error: true, operationStatus: 'Processs Terminated!' });
+                    errorMessage = errorSender(customError, defaultError);
+                  }
                 }
               }
             });
@@ -266,9 +272,11 @@ exports.validateFields = (formType, formSchema, userForm, customError, allowNull
         if (fieldsWithArrayAsValues.length) {
           Object.keys(userForm).forEach((key) => {
             fieldsWithArrayAsValues.forEach((obj) => {
-              if (obj.field === key && !Array.isArray(userForm[key])) {
-                const defaultError = errorMsg('Validation Error', 400, `${key}`, `${formType}`, `${splitCamelCaseWord(obj.field)} should be an array dataType`, { error: true, operationStatus: 'Processs Terminated!' });
-                errorMessage = errorSender(customError, defaultError);
+              if (userForm[key]) {
+                if (obj.field === key && !Array.isArray(userForm[key])) {
+                  const defaultError = errorMsg('ValidationError', 400, `${key}`, `${formType}`, `${splitCamelCaseWord(obj.field)} should be an array dataType`, { error: true, operationStatus: 'Processs Terminated!' });
+                  errorMessage = errorSender(customError, defaultError);
+                }
               }
             });
           });
@@ -280,9 +288,11 @@ exports.validateFields = (formType, formSchema, userForm, customError, allowNull
         if (fieldsWithObjectAsValues.length) {
           Object.keys(userForm).forEach((key) => {
             fieldsWithObjectAsValues.forEach((obj) => {
-              if (obj.field === key && typeof userForm[key] !== 'object' && userForm[key] !== null) {
-                const defaultError = errorMsg('Validation Error', 400, `${key}`, `${formType}`, `${splitCamelCaseWord(obj.field)} should be an object literal dataType`, { error: true, operationStatus: 'Processs Terminated!' });
-                errorMessage = errorSender(customError, defaultError);
+              if (userForm[key]) {
+                if (obj.field === key && typeof userForm[key] !== 'object' && userForm[key] !== null) {
+                  const defaultError = errorMsg('ValidationError', 400, `${key}`, `${formType}`, `${splitCamelCaseWord(obj.field)} should be an object literal dataType`, { error: true, operationStatus: 'Processs Terminated!' });
+                  errorMessage = errorSender(customError, defaultError);
+                }
               }
             });
           });
@@ -294,9 +304,11 @@ exports.validateFields = (formType, formSchema, userForm, customError, allowNull
         if (fieldsWithDecimalValues.length) {
           Object.keys(userForm).forEach((key) => {
             fieldsWithDecimalValues.forEach((obj) => {
-              if (obj.field === key && (!isDecimal(userForm[key]) || !userForm[key])) {
-                const defaultError = errorMsg('Validation Error', 400, `${key}`, `${formType}`, `${splitCamelCaseWord(obj.field)} should be a decimal value`, { error: true, operationStatus: 'Processs Terminated!' });
-                errorMessage = errorSender(customError, defaultError);
+              if (userForm[key]) {
+                if (obj.field === key && !isDecimal(userForm[key])) {
+                  const defaultError = errorMsg('ValidationError', 400, `${key}`, `${formType}`, `${splitCamelCaseWord(obj.field)} should be a decimal value`, { error: true, operationStatus: 'Processs Terminated!' });
+                  errorMessage = errorSender(customError, defaultError);
+                }
               }
             });
           });
@@ -308,9 +320,11 @@ exports.validateFields = (formType, formSchema, userForm, customError, allowNull
         if (fieldsWithAlphaValues.length) {
           Object.keys(userForm).forEach((key) => {
             fieldsWithAlphaValues.forEach((obj) => {
-              if (obj.field === key && (!isAlpha(userForm[key]) || !userForm[key])) {
-                const defaultError = errorMsg('Validation Error', 400, `${key}`, `${formType}`, `${splitCamelCaseWord(obj.field)} should only be alphabets`, { error: true, operationStatus: 'Processs Terminated!' });
-                errorMessage = errorSender(customError, defaultError);
+              if (userForm[key]) {
+                if (obj.field === key && !isAlpha(userForm[key])) {
+                  const defaultError = errorMsg('ValidationError', 400, `${key}`, `${formType}`, `${splitCamelCaseWord(obj.field)} should only be alphabets`, { error: true, operationStatus: 'Processs Terminated!' });
+                  errorMessage = errorSender(customError, defaultError);
+                }
               }
             });
           });
@@ -322,9 +336,11 @@ exports.validateFields = (formType, formSchema, userForm, customError, allowNull
         if (fieldsWithIntegerValues.length) {
           Object.keys(userForm).forEach((key) => {
             fieldsWithIntegerValues.forEach((obj) => {
-              if (obj.field === key && (!isInteger(userForm[key]) || !userForm[key])) {
-                const defaultError = errorMsg('Validation Error', 400, `${key}`, `${formType}`, `${splitCamelCaseWord(obj.field)} should only be integers`, { error: true, operationStatus: 'Processs Terminated!' });
-                errorMessage = errorSender(customError, defaultError);
+              if (userForm[key]) {
+                if (obj.field === key && !isInteger(userForm[key])) {
+                  const defaultError = errorMsg('ValidationError', 400, `${key}`, `${formType}`, `${splitCamelCaseWord(obj.field)} should only be integers`, { error: true, operationStatus: 'Processs Terminated!' });
+                  errorMessage = errorSender(customError, defaultError);
+                }
               }
             });
           });
@@ -336,9 +352,11 @@ exports.validateFields = (formType, formSchema, userForm, customError, allowNull
           Object.keys(userForm).forEach((key) => {
             fieldsWithNameValues.forEach((obj) => {
               if (obj.field === key) {
-                if (!isName(userForm[key]) || !userForm[key]) {
-                  const defaultError = errorMsg('Validation Error', 400, `${key}`, `${formType}`, `${splitCamelCaseWord(obj.field)} should be a proper name, and it should not contain special characters like: (#@$!±^&*+=">?{</}_|)`, { error: true, operationStatus: 'Processs Terminated!' });
-                  errorMessage = errorSender(customError, defaultError);
+                if (userForm[key]) {
+                  if (!isName(userForm[key])) {
+                    const defaultError = errorMsg('ValidationError', 400, `${key}`, `${formType}`, `${splitCamelCaseWord(obj.field)} should be a proper name, and it should not contain special characters like: (#@$!±^&*+=">?{</}_|)`, { error: true, operationStatus: 'Processs Terminated!' });
+                    errorMessage = errorSender(customError, defaultError);
+                  }
                 }
               }
             });

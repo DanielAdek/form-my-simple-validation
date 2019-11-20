@@ -129,7 +129,7 @@ if (validationResult.error) {
 // validation result sample
 "error": {
   "error": true,
-  "Stacktrace": "Validation Error",
+  "Stacktrace": "ValidationError",
   "metadata": [
     {
       "statusCode": 400,
@@ -155,10 +155,10 @@ Following is a table of the options you can use in your schema for validation re
 | `required`               | `true` or `false` (Boolean)              | Set `true` value to ensure that the input field should not be empty and vice versa. |
 | `isEmail`  | `true` or `false` (Boolean)             | This will ensure that the value entered is a valid email format. e.g `not-email-format` will not be accepted but `email-format@gmail.com` will be accepted. _(Note: this does not validate valid email address, only deals with format)_ |
 | `isName` | `true` or `false` (Boolean)              | This ensures that special characters like (#,:,0-9,%, e.t.c) should not be included in a name field. Input field allows spaces, a comma, a dot between names, e.g `Daniel, Adek`, `John Doe`, but does not accept values like `Daniel Adek2`, or `John? Doe!`. |
-| `isPhoneNumber`                   | `true` or `false` (Boolean)             | Input field will accepted only a valid phone number format. e.g `+2348100000001` but does not accept `+234-81-00-0-00-001` _(Note: this does not validate valid number, only deals with format)_ |
+| `isPhoneNumber`                   | `true` or `false` (Boolean)             | Input field will accept only a valid phone number format. e.g `+2348100000001` but does not accept `+234-81-00-0-00-001` _(Note: this does not validate valid number, only deals with format)_ |
 | `isInteger`               | `true` or `false` (Boolean)             | Input field accepts integer value only. |
 | `isDecimal`                | `true` or `false` (Boolean)| Input field accepts only decimal values.
-| `isAlpha`                    | `true` or `false` (Boolean)                | Input field only accept alphabet. It does not allow space or special characters. |
+| `isAlpha`                    | `true` or `false` (Boolean)                | Input field only accept alphabets. It does not allow space or special characters. |
 | `minLength`       | `Number`         | Validate the field and ensure that the characters it is not lesser than specifield minimum length. |
 | `maxLength`          | `Number`                 | Validate the field and ensure that the characters it is not more than specifield maximum length. |
 | `isArray`                | `true` or `false` (Boolean)              | This only allows array as the value. |
