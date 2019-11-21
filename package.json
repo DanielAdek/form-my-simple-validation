@@ -1,6 +1,6 @@
 {
   "name": "form-my-simple-validation",
-  "version": "0.0.9",
+  "version": "0.0.8",
   "main": "app.js",
   "repository": "https://github.com/DanielAdek/form-simple-validation.git",
   "bugs": {

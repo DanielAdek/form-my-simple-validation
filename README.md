@@ -166,7 +166,7 @@ Following is a table of the options you can use in your schema for validation re
 
 
 ## License
----
+
 [The MIT License](https://choosealicense.com/licenses/mit/)
 
 ***Copyright &copy; 2019 DanielAdek***
