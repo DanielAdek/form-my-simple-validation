@@ -80,7 +80,7 @@ ___formSchema.js___ ***file***
 const Schema =  {
   form: {
     formType: 'signup',
-    Email: { field: 'email', isEmail: true },
+    Email: { field: 'email', isEmail: true, required: true },
     FullName: { field: 'fullName', required: true, isName: true },
     Phone: { field: 'phoneNumber', required: true, isPhoneNumber: true },
     Password: {
