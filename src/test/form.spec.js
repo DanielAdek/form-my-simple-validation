@@ -423,6 +423,49 @@ describe('FORM VALIDATION', () => {
   });
 
 
+  it('Should return an object containing message (RATING should be within range specification: 1 - 5', () => {
+    const form = { rating: 6 };
+    const validate = Form.validateFields('sampleForm', formSchema, form);
+    /**
+       * @desc TEST FOR PROPERTIES
+       */
+    expect(validate.error).property('error');
+    expect(validate.error).property('details');
+    expect(validate.error).property('message');
+    expect(validate.error).property('metadata');
+    expect(validate.error).property('Stacktrace');
+    expect(validate.error.details).property('error');
+    expect(validate.error.metadata[0]).property('field');
+    expect(validate.error.metadata[0]).property('target');
+    expect(validate.error.metadata[0]).property('statusCode');
+    expect(validate.error.details).property('operationStatus');
+    /**
+       * @desc TEST FOR DATA-TYPES
+       */
+    expect(typeof validate).equal('object');
+    expect(typeof validate.error).equal('object');
+    expect(typeof validate.error.error).equal('boolean');
+    expect(typeof validate.error.message).equal('string');
+    expect(typeof validate.error.metadata).equal('object');
+    expect(typeof validate.error.Stacktrace).equal('string');
+    expect(typeof validate.error.details.error).equal('boolean');
+    expect(typeof validate.error.metadata[0].field).equal('string');
+    expect(typeof validate.error.metadata[0].target).equal('string');
+    expect(typeof validate.error.metadata[0].statusCode).equal('number');
+    expect(typeof validate.error.details.operationStatus).equal('string');
+    /**
+       * @desc TEST FOR VALUES
+       */
+    expect(validate.error.error).equal(true);
+    expect(validate.error.details.error).equal(true);
+    expect(validate.error.metadata[0].statusCode).equal(400);
+    expect(validate.error.metadata[0].field).equal('rating');
+    expect(validate.error.Stacktrace).equal('ValidationError');
+    expect(validate.error.metadata[0].target).equal('sampleForm');
+    expect(validate.error.details.operationStatus).equal('Processs Terminated!');
+    expect(validate.error.message).equal('RATING should be within range specification: 1 - 5');
+  });
+
   it('Should return an object containing message (FULL NAME should be a proper name, and it should not contain special characters like: (#@$!±^&*+=">?{</}_|))', () => {
     const form = {
       fullName: '09-kk', phoneNumber: '+2348100000000', email: 'you@email.com', password: '12345678'

@@ -131,6 +131,7 @@ exports.validateFields = (formType, formSchema, userForm, customError, allowNull
   const maxMinFields = [];
   const requiredFields = [];
   const expectedFields = {};
+  const fieldsWithRange = [];
   const fieldsWithNameValues = [];
   const fieldsWithAlphaValues = [];
   const fieldsWithIntegerValues = [];
@@ -188,6 +189,10 @@ exports.validateFields = (formType, formSchema, userForm, customError, allowNull
             // Requirement for object not null
             if (typeof formSchema[request][keys].isObject === 'boolean' && formSchema[request][keys].isObject) {
               fieldsWithObjectAsValues.push(formSchema[request][keys]);
+            }
+            // Requirement for range value
+            if (typeof formSchema[request][keys].range === 'object' && formSchema[request][keys].range !== null) {
+              fieldsWithRange.push(formSchema[request][keys]);
             }
           });
 
@@ -355,6 +360,25 @@ exports.validateFields = (formType, formSchema, userForm, customError, allowNull
                 if (userForm[key]) {
                   if (!isName(userForm[key])) {
                     const defaultError = errorMsg('ValidationError', 400, `${key}`, `${formType}`, `${splitCamelCaseWord(obj.field)} should be a proper name, and it should not contain special characters like: (#@$!±^&*+=">?{</}_|)`, { error: true, operationStatus: 'Processs Terminated!' });
+                    errorMessage = errorSender(customError, defaultError);
+                  }
+                }
+              }
+            });
+          });
+        }
+
+        /**
+         * @desc VALIDATE FOR RANGE VALUES
+         */
+        if (fieldsWithRange.length) {
+          Object.keys(userForm).forEach((key) => {
+            fieldsWithRange.forEach((obj) => {
+              if (obj.field === key) {
+                const [from, to] = Object.keys(obj.range);
+                if (from === 'from' && to === 'to' && typeof obj.range[from] === 'number' && typeof obj.range[to] === 'number') {
+                  if (typeof userForm[key] === 'number' && (userForm[key] < obj.range[from] || userForm[key] > obj.range[to])) {
+                    const defaultError = errorMsg('ValidationError', 400, `${key}`, `${formType}`, `${splitCamelCaseWord(obj.field)} should be within range specification: ${obj.range[from]} - ${obj.range[to]}`, { error: true, operationStatus: 'Processs Terminated!' });
                     errorMessage = errorSender(customError, defaultError);
                   }
                 }

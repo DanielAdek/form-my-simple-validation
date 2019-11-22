@@ -12,5 +12,9 @@ export default {
     password: {
       field: 'password', required: true, minLength: 8, maxLength: 15
     },
+  },
+  sampleForm: {
+    formType: 'sampleForm',
+    obj: { field: 'rating', isInteger: true, range: { from: 1, to: 5 } }
   }
 };
