@@ -7,9 +7,9 @@
  * [Introduction](#introduction)
  * [Installation](#installation)
  * [Usage](#usage)
-    * [params](#_params_)
+    * [params](#params)
     * [Usage example](#usage-example)
- * [Options For Validation Requirements](#options-for-validation-requirements)
+ * [APIs](#apis)
 
 ## Introduction
 
@@ -54,7 +54,7 @@ if (validationResult.error) {
 }
 ```
 
-##### _Params_
+##### Params
 
 _The first three parameters are compulsory, while the rest are optional. The table below explains params._
 
@@ -68,7 +68,7 @@ allowNullOrUndefinedValue _`(optional)`_ | _`Boolean`_ | When set to `false`, an
 
 
 
-#### ***Usage example***.
+#### Usage example.
 
 _You need to create a schema as a validation requirement for the user-form object, in the format below:_
 
@@ -146,9 +146,9 @@ if (validationResult.error) {
 
 ```
 
-## Options For Validation Requirements.
+## APIs
 
-Following is a table of the options you can use in your schema for validation requirement:
+The following is a table of the options you can use in your schema for validation requirement.
 
 | Options                | Values(DataTypes)     | Description
 ------------------------ | --------------------- | -------------------
